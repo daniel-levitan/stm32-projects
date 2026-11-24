@@ -23,27 +23,23 @@
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
-/* To turn a LED on we need to:
- *    1. Enable its correspondent clock
- *    2. Set GPIOD to output mode through the MODER register */
+/* To turn an LED on, we need to:
+ * 1. Enable its corresponding clock.
+ * 2. Set PD12 to output mode through the MODER register.
+ */
 
 
 int main(void)
 {
-
-
 	/* 1. Enabling GPIOD clock */
-	RCC->AHB1ENR = RCC->AHB1ENR | (1U << 3);
+	RCC->AHB1ENR |= (1U << 3);
 
-	/* 2. Setting GPIOD to output mode via MODER register */
-	/* Getting 0b11, shifting 24 positions so it lands on bits 24 and 25, inverting it and ANDing it to clear the bits */
-	GPIOD->MODER &= ~(3U << 24);
-	/* Setting bits 24 and 25 to 0b01*/
-	GPIOD->MODER |= (1U << 24);
+    /* 2. Setting PD12 to output mode via MODER register */
+	GPIOD->MODER &= ~(3U << 24);    /* Clear bits 25 and 24 */
+	GPIOD->MODER |= (1U << 24);     /* Set bits 25:24 to 01 */
 
-	/* 3. Setting PD12 to 1, turning the green LED on */
-	/* This is a set operation, so we don't need to AND it */
-	GPIOD->BSRR = (1U << 12);
+    /* 3. Setting PD12 to 1, turning the green LED on */
+	GPIOD->BSRR = (1U << 12);       /* Set PD12 using a single write */
 
     /* Loop forever */
 	for(;;);
